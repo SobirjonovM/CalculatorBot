@@ -1,6 +1,5 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,8 +8,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 
-import static java.lang.Math.toIntExact;
-import static java.lang.Thread.sleep;
 
 public class CalculatorBot extends TelegramLongPollingBot {
 
@@ -99,7 +96,6 @@ public class CalculatorBot extends TelegramLongPollingBot {
                         nums.append("9");
                         splitSignList(callback);
                     }
-
                 }
 
 
@@ -110,7 +106,7 @@ public class CalculatorBot extends TelegramLongPollingBot {
                     if(!nums.substring(nums.length()-1).equals("#")){
                         nums.append("#");
                     }
-                    signs.append(" "+ callback);
+                    signs.append(" ").append(callback);
                 }
                 System.out.println(signs);
 
@@ -143,17 +139,17 @@ public class CalculatorBot extends TelegramLongPollingBot {
         double result = 0;
         ArrayList<Integer> numbersList = new ArrayList<>();
         ArrayList<String> signsList = new ArrayList<>();
-        String num[] = nums.toString().split("#");
+        String[] num = nums.toString().split("#");
         for (String s : num) {
             numbersList.add(Integer.parseInt(s));
         }
         System.out.println(numbersList);
 
 
-        String sig[] = signs.toString().split("#");
-        for (int i = 0; i < sig.length; i++) {
-            String[] item = sig[i].split(" ");
-            signsList.add(item[item.length-1]);
+        String[] sig = signs.toString().split("#");
+        for (String s : sig) {
+            String[] item = s.split(" ");
+            signsList.add(item[item.length - 1]);
 
         }
         System.out.println(signsList);
@@ -161,18 +157,11 @@ public class CalculatorBot extends TelegramLongPollingBot {
 
 
         for (int i = 0; i < signsList.size(); i++) {
-            if(signsList.get(i).equals("plus")){
-                result += numbersList.get(i);
-
-            }
-            else if(signsList.get(i).equals("minus")){
-                result -= numbersList.get(i);
-            }
-            else if(signsList.get(i).equals("star")){
-                result *= numbersList.get(i);
-            }
-            else if(signsList.get(i).equals("division")){
-                result /= numbersList.get(i);
+            switch (signsList.get(i)) {
+                case "plus" -> result += numbersList.get(i);
+                case "minus" -> result -= numbersList.get(i);
+                case "star" -> result *= numbersList.get(i);
+                case "division" -> result /= numbersList.get(i);
             }
         }
         System.out.println(result);
